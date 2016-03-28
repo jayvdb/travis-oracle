@@ -1,12 +1,26 @@
 language: ruby
 sudo: required
 
+addons:
+  apt:
+    packages:
+      - unzip
+      - libaio-dev
+
 env:
   global:
     - ORACLE_COOKIE=sqldev
     - ORACLE_FILE=oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip
     - ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
     - ORACLE_SID=XE
+
+matrix:
+  include:
+    - env: APT_ADDON=1
+
+    - env: APT_ADDON=0
+      addons:
+        apt: false
 
 before_install:
   - ./download.sh
