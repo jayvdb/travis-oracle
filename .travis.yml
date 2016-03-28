@@ -1,6 +1,14 @@
 language: ruby
 sudo: required
 
+addons:
+  apt:
+    packages:
+      - bc
+      - unzip
+      - libaio-dev
+      - rpm
+
 env:
   global:
     - ORACLE_COOKIE=sqldev
@@ -10,4 +18,5 @@ env:
 
 before_install:
   - ./download.sh
+  - find .
   - ./install.sh
