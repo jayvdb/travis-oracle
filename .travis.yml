@@ -8,6 +8,21 @@ env:
     - ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
     - ORACLE_SID=XE
 
+matrix:
+  include:
+    # Dont use the apt addon
+    - env: APT_ADDON=0
+
+    # Use apt addon
+    - env: APT_ADDON=1
+      addons:
+        apt:
+          packages:
+            - bc
+            - unzip
+            - libaio-dev
+            - rpm
+
 before_install:
   - ./download.sh
   - ./install.sh
