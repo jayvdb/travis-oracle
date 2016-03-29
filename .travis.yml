@@ -25,7 +25,19 @@ matrix:
           packages:
             - libaio1
             - rpm
+      sudo: required
+    - env:
+        - ORACLE_HOME=/home/travis/u01/app/oracle/product/11.2.0/xe
+          ORACLE_SID=XE
+      sudo: false
+      addons:
+        apt:
+          packages:
+            - bc
+            - unzip
+            - libaio-dev
+            - rpm
 
 before_install:
-  - ./download.sh
-  - ./install.sh
+  - bash -x ./download.sh
+  - bash -x ./install.sh
