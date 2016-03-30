@@ -14,5 +14,6 @@ matrix:
     - dist: precise
 
 before_install:
+  - which unzip
   - ./download.sh
   - ./install.sh
