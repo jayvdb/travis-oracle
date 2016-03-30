@@ -16,9 +16,19 @@ env:
 
 matrix:
   include:
-    - env: APT_ADDON=1
+    - env: PRECISE=1 APT_ADDON=1
+      dist: precise
 
-    - env: APT_ADDON=0
+    - env: PRECISE=1 APT_ADDON=0
+      dist: precise
+      addons:
+        apt: false
+
+    - env: TRUSTY=1 APT_ADDON=1
+      dist: trusty
+
+    - env: TRUSTY=1 APT_ADDON=0
+      dist: trusty
       addons:
         apt: false
 
