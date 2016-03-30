@@ -8,6 +8,13 @@ env:
     - ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
     - ORACLE_SID=XE
 
+matrix:
+  include:
+    - dist: precise
+      env: DIST=precise
+    - dist: trusty
+      env: DIST=trusty
+
 before_install:
   - ./download.sh
   - ./install.sh
