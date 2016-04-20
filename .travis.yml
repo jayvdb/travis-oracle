@@ -1,5 +1,4 @@
 language: ruby
-sudo: required
 
 env:
   global:
@@ -11,10 +10,48 @@ env:
 matrix:
   include:
     - dist: precise
-      env: DIST=precise
+      env:
+        - DIST=precise
+        - SUDO=false
+      addons:
+        apt:
+          packages:
+            - libaio-dev
+            - rpm
+      sudo: false
+
+    - dist: precise
+      env:
+        - DIST=precise
+        - SUDO=true
+      addons:
+        apt:
+          packages:
+      sudo: required
+
     - dist: trusty
-      env: DIST=trusty
+      env:
+        - DIST=trusty
+        - SUDO=false
+      addons:
+        apt:
+          packages:
+            - libaio-dev
+            - rpm
+      sudo: false
+
+
+    - dist: trusty
+      env:
+        - DIST=trusty
+        - SUDO=true
+      addons:
+        apt:
+          packages:
+      sudo: required
 
 before_install:
-  - ./download.sh
-  - ./install.sh
+  - if [[ $SUDO = false ]]; then export ORACLE_HOME=$HOME/$ORACLE_HOME ; fi
+  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME/lib
+  - bash -x ./download.sh
+  - bash -x ./install.sh
