@@ -33,9 +33,7 @@ matrix:
       addons:
         apt:
           packages:
-            - bc
-            - unzip
-            - libaio-dev
+            - libaio1
             - rpm
 
 before_install:
