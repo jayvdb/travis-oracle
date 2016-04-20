@@ -20,14 +20,14 @@ matrix:
             - rpm
       sudo: false
 
-    - dist: precise
-      env:
-        - DIST=precise
-        - SUDO=true
-      addons:
-        apt:
-          packages:
-      sudo: required
+#    - dist: precise
+#      env:
+#        - DIST=precise
+#        - SUDO=true
+#      addons:
+#        apt:
+#          packages:
+#      sudo: required
 
     - dist: trusty
       env:
@@ -40,15 +40,14 @@ matrix:
             - rpm
       sudo: false
 
-
-    - dist: trusty
-      env:
-        - DIST=trusty
-        - SUDO=true
-      addons:
-        apt:
-          packages:
-      sudo: required
+#    - dist: trusty
+#      env:
+#        - DIST=trusty
+#        - SUDO=true
+#      addons:
+#        apt:
+#          packages:
+#      sudo: required
 
 before_install:
   - if [[ $SUDO = false ]]; then export ORACLE_HOME=$HOME/$ORACLE_HOME ; fi
