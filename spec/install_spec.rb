@@ -74,12 +74,12 @@ describe 'install.sh' do
     describe 'shell access' do
       let(:sqlplus) { ENV['ORACLE_HOME'] + '/bin/sqlplus' }
 
-      it 'grants normal access without password to the current user' do
+      it 'grants normal access with password to the current user' do
         IO.popen([sqlplus, %w(-L -S travis/travis)].flatten, 'w') { |io| io.puts 'exit' }
         expect($?).to be_success
       end
 
-      it 'grants DBA access without password to the current user' do
+      it 'grants DBA access with password to the current user' do
         IO.popen([sqlplus, %w(-L -S sys/travis AS SYSDBA)].flatten, 'w') { |io| io.puts 'exit' }
         expect($?).to be_success
       end
@@ -88,7 +88,7 @@ describe 'install.sh' do
     describe 'library access' do
       before(:context) { require 'oci8' }
 
-      it 'grants normal access without password to the current user' do
+      it 'grants normal access with password to the current user' do
         OCI8.new('travis/travis').exec('SELECT 1 FROM DUAL') { |row| expect(row).to eq([1]) }
       end
     end

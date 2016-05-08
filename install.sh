@@ -1,12 +1,7 @@
 #!/bin/sh -e
 
-SUDO=`which sudo`
-
-if [ "`find "$SUDO" -perm -4000`" = "$SUDO" ]; then
-  SUDO_ENABLED=1
-else
-  SUDO_ENABLED=0
-fi
+test -u /usr/bin/sudo
+SUDO_ENABLED=$?
 
 [ -n "$ORACLE_FILE" ] || { echo "Missing ORACLE_FILE environment variable!"; exit 1; }
 [ -n "$ORACLE_HOME" ] || { echo "Missing ORACLE_HOME environment variable!"; exit 1; }
@@ -36,6 +31,8 @@ if [ $SUDO_ENABLED -eq 1 ]; then
   echo 'OS_AUTHENT_PREFIX=""' | sudo tee -a "$ORACLE_HOME/config/scripts/init.ora" > /dev/null
   sudo usermod -aG dba $USER
   ( echo ; echo ; echo travis ; echo travis ; echo n ) | sudo AWK='/usr/bin/awk' /etc/init.d/oracle-xe configure
+  IDENTIFIED_BY='EXTERNALLY'
+
 else
   mkdir /home/travis/u01
   rpm --install --nodeps --nopre --noscripts --notriggers --relocate /u01=/home/travis/u01 --relocate /etc=/home/travis/u01 --relocate /usr/=/home/travis/u01 "$ORACLE_RPM"
@@ -79,10 +76,10 @@ SQL
   $ORACLE_HOME/bin/sqlplus sys/travis AS SYSDBA <<SQL
 startup
 SQL
-
+IDENTIFIED_BY='BY "travis"'
 fi
 
 "$ORACLE_HOME/bin/sqlplus" -L -S sys/travis AS SYSDBA <<SQL
-CREATE USER $USER IDENTIFIED EXTERNALLY;
+CREATE USER $USER IDENTIFIED $IDENTIFIED_BY;
 GRANT CONNECT, RESOURCE TO $USER;
 SQL
