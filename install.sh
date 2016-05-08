@@ -34,25 +34,22 @@ if [ $SUDO_DISABLED -eq 0 ]; then
   IDENTIFIED_BY='EXTERNALLY'
 
 else
-  mkdir /home/travis/oracle
-  rpm --install --nodeps --nopre --noscripts --notriggers  --relocate "/=$HOME/oracle/" "$ORACLE_RPM"
+  ORACLE_BASE=$HOME/oracle
+  mkdir $ORACLE_BASE
+  rpm --install --nodeps --nopre --noscripts --notriggers  --relocate "/=$ORACLE_BASE/" "$ORACLE_RPM"
 
-  ln -s /home/travis/oracle/u01/app/oracle/product/11.2.0/xe/lib/libclntsh.so.11.1 /home/travis/oracle/u01/app/oracle/product/11.2.0/xe/lib/libclntsh.so
+  ln -s $ORACLE_HOME/lib/libclntsh.so.11.1 $ORACLE_HOME/lib/libclntsh.so
 
   # this should check that LD_LIBRARY_PATH was set correctly
   LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME/lib; export LD_LIBRARY_PATH
 
   echo 'OS_AUTHENT_PREFIX=""' > "$ORACLE_HOME/config/scripts/init.ora"
-  mkdir /home/travis/oracle/u01/app/oracle/oradata
-  mkdir /home/travis/oracle/u01/app/oracle/diag
-  sed -i "s/%hostname%/localhost/g" $ORACLE_HOME/network/admin/listener.ora
-  sed -i "s/%port%/1521/g" $ORACLE_HOME/network/admin/listener.ora
-  sed -i "s/\/u01/\/home\/travis\/oracle\/u01/g" $ORACLE_HOME/network/admin/listener.ora
-
+  mkdir $ORACLE_BASE/u01/app/oracle/oradata
+  mkdir $ORACLE_BASE/u01/app/oracle/diag
+  sed -i "s:%hostname%:localhost:g;s:%port%:1521:g;s:/u01:$ORACLE_BASE:g;" $ORACLE_HOME/network/admin/listener.ora
   sed -i "/^memory_target/d" $ORACLE_HOME/config/scripts/init.ora $ORACLE_HOME/config/scripts/initXETemp.ora $ORACLE_HOME/dbs/init.ora
 
-  find $ORACLE_HOME/config -type f | xargs sed -i "s/\/u01/\/home\/travis\/oracle\/u01/g"
-  find $ORACLE_HOME/config -type f | xargs sed -i "s/%ORACLE_HOME%/\/home\/travis\/oracle\/u01\/app\/oracle\/product\/11.2.0\/xe/g"
+  find $ORACLE_HOME/config -type f | xargs sed -i "s:/u01:$ORACLE_BASE/u01:g;s:%ORACLE_HOME%:$ORACLE_BASE:g;"
 
   mkdir -p $ORACLE_HOME/network/log $ORACLE_HOME/config/log
   touch $ORACLE_HOME/network/log/listener.log $ORACLE_HOME/config/log/CloneRmanRestore.log
