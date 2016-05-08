@@ -47,7 +47,7 @@ else
   mkdir /home/travis/oracle/u01/app/oracle/diag
   sed -i "s/%hostname%/localhost/g" $ORACLE_HOME/network/admin/listener.ora
   sed -i "s/%port%/1521/g" $ORACLE_HOME/network/admin/listener.ora
-  sed -i "s/\/u01/\/home\/travis\/u01/g" $ORACLE_HOME/network/admin/listener.ora
+  sed -i "s/\/u01/\/home\/travis\/oracle\/u01/g" $ORACLE_HOME/network/admin/listener.ora
 
   sed -i "/^memory_target/d" $ORACLE_HOME/config/scripts/init.ora $ORACLE_HOME/config/scripts/initXETemp.ora $ORACLE_HOME/dbs/init.ora
 
