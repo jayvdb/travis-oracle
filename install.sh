@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 test -u /usr/bin/sudo
-SUDO_ENABLED=$?
+SUDO_DISABLED=$?
 
 [ -n "$ORACLE_FILE" ] || { echo "Missing ORACLE_FILE environment variable!"; exit 1; }
 [ -n "$ORACLE_HOME" ] || { echo "Missing ORACLE_HOME environment variable!"; exit 1; }
@@ -13,7 +13,7 @@ cd "$(dirname "$(readlink -f "$0")")"
 dpkg -s bc libaio1 rpm unzip > /dev/null 2>&1 ||
   ( sudo apt-get -qq update && sudo apt-get --no-install-recommends -qq install bc libaio1 rpm unzip )
 
-if [ $SUDO_ENABLED -eq 1 ]; then
+if [ $SUDO_DISABLED -eq 0 ]; then
   df -B1 /dev/shm | awk 'END { if ($1 != "shmfs" && $1 != "tmpfs" || $2 < 2147483648) exit 1 }' ||
     ( sudo rm -r /dev/shm && sudo mkdir /dev/shm && sudo mount -t tmpfs shmfs -o size=2G /dev/shm )
 
@@ -25,7 +25,7 @@ fi
 
 unzip -j "$(basename $ORACLE_FILE)" "*/$ORACLE_RPM"
 
-if [ $SUDO_ENABLED -eq 1 ]; then
+if [ $SUDO_DISABLED -eq 0 ]; then
   sudo rpm --install --nodeps --nopre "$ORACLE_RPM"
 
   echo 'OS_AUTHENT_PREFIX=""' | sudo tee -a "$ORACLE_HOME/config/scripts/init.ora" > /dev/null
