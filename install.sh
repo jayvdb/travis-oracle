@@ -42,7 +42,7 @@ else
   # this should check that LD_LIBRARY_PATH was set correctly
   LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME/lib; export LD_LIBRARY_PATH
 
-  echo 'OS_AUTHENT_PREFIX=""' | tee -a "$ORACLE_HOME/config/scripts/init.ora" > /dev/null
+  echo 'OS_AUTHENT_PREFIX=""' > "$ORACLE_HOME/config/scripts/init.ora"
   mkdir /home/travis/oracle/u01/app/oracle/oradata
   mkdir /home/travis/oracle/u01/app/oracle/diag
   sed -i "s/%hostname%/localhost/g" $ORACLE_HOME/network/admin/listener.ora
@@ -51,8 +51,8 @@ else
 
   sed -i "/^memory_target/d" $ORACLE_HOME/config/scripts/init.ora $ORACLE_HOME/config/scripts/initXETemp.ora $ORACLE_HOME/dbs/init.ora
 
-  find $ORACLE_HOME/config -type f | xargs sed -i "s/\/u01/\/home\/travis\/u01/g"
-  find $ORACLE_HOME/config -type f | xargs sed -i "s/%ORACLE_HOME%/\/home\/travis\/u01\/app\/oracle\/product\/11.2.0\/xe/g"
+  find $ORACLE_HOME/config -type f | xargs sed -i "s/\/u01/\/home\/travis\/oracle\/u01/g"
+  find $ORACLE_HOME/config -type f | xargs sed -i "s/%ORACLE_HOME%/\/home\/travis\/oracle\/u01\/app\/oracle\/product\/11.2.0\/xe/g"
 
   mkdir -p $ORACLE_HOME/network/log $ORACLE_HOME/config/log
   touch $ORACLE_HOME/network/log/listener.log $ORACLE_HOME/config/log/CloneRmanRestore.log
