@@ -34,19 +34,17 @@ if [ $SUDO_DISABLED -eq 0 ]; then
   IDENTIFIED_BY='EXTERNALLY'
 
 else
-  mkdir /home/travis/u01
-  rpm --install --nodeps --nopre --noscripts --notriggers --relocate /u01=/home/travis/u01 --relocate /etc=/home/travis/u01 --relocate /usr/=/home/travis/u01 "$ORACLE_RPM"
+  mkdir /home/travis/oracle
+  rpm --install --nodeps --nopre --noscripts --notriggers  --relocate "/=$HOME/oracle/" "$ORACLE_RPM"
 
-  ln -s /home/travis/u01/app/oracle/product/11.2.0/xe/lib/libclntsh.so.11.1 /home/travis/u01/app/oracle/product/11.2.0/xe/lib/libclntsh.so
+  ln -s /home/travis/oracle/u01/app/oracle/product/11.2.0/xe/lib/libclntsh.so.11.1 /home/travis/oracle/u01/app/oracle/product/11.2.0/xe/lib/libclntsh.so
 
   # this should check that LD_LIBRARY_PATH was set correctly
   LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME/lib; export LD_LIBRARY_PATH
-  # also ORACLE_SID?
-  ORACLE_SID=XE; export ORACLE_SID
 
   echo 'OS_AUTHENT_PREFIX=""' | tee -a "$ORACLE_HOME/config/scripts/init.ora" > /dev/null
-  mkdir /home/travis/u01/app/oracle/oradata
-  mkdir /home/travis/u01/app/oracle/diag
+  mkdir /home/travis/oracle/u01/app/oracle/oradata
+  mkdir /home/travis/oracle/u01/app/oracle/diag
   sed -i "s/%hostname%/localhost/g" $ORACLE_HOME/network/admin/listener.ora
   sed -i "s/%port%/1521/g" $ORACLE_HOME/network/admin/listener.ora
   sed -i "s/\/u01/\/home\/travis\/u01/g" $ORACLE_HOME/network/admin/listener.ora
