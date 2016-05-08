@@ -12,8 +12,8 @@ describe 'install.sh' do
     executable = '/sbin/chkconfig'
 
     expect(File).to exist(executable)
-    expect(File.lstat(executable).mode).to eq('100744'.to_i(8))
-    expect(IO.read(executable)).to eq("#!/bin/sh\n")
+    expect(File.lstat(executable).mode).to eq('100755'.to_i(8))
+    expect(IO.read(executable)).to start_with("#!/")
   end
 
   it 'creates a directory at /var/lock/subsys' do
