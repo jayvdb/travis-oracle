@@ -36,6 +36,8 @@ if [ $SUDO_ENABLED -eq 1 ]; then
   echo 'OS_AUTHENT_PREFIX=""' | sudo tee -a "$ORACLE_HOME/config/scripts/init.ora" > /dev/null
   sudo usermod -aG dba $USER
   ( echo ; echo ; echo travis ; echo travis ; echo n ) | sudo AWK='/usr/bin/awk' /etc/init.d/oracle-xe configure
+  IDENTIFIED_BY='EXTERNALLY'
+
 else
   mkdir /home/travis/u01
   rpm --install --nodeps --nopre --noscripts --notriggers --relocate /u01=/home/travis/u01 --relocate /etc=/home/travis/u01 --relocate /usr/=/home/travis/u01 "$ORACLE_RPM"
@@ -79,10 +81,10 @@ SQL
   $ORACLE_HOME/bin/sqlplus sys/travis AS SYSDBA <<SQL
 startup
 SQL
-
+IDENTIFIED_BY='"travis"'
 fi
 
 "$ORACLE_HOME/bin/sqlplus" -L -S sys/travis AS SYSDBA <<SQL
-CREATE USER $USER IDENTIFIED EXTERNALLY;
+CREATE USER $USER IDENTIFIED $IDENTIFIED_BY;
 GRANT CONNECT, RESOURCE TO $USER;
 SQL

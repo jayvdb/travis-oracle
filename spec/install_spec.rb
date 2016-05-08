@@ -1,6 +1,6 @@
 
 describe 'install.sh' do
-  context 'when container mode is not active', :if => ENV.has_key?('ORACLE_HOME') && ENV['ORACLE_HOME'].start_with?('/u01') do
+  context 'when container mode is not active', :sudo => false do
     it 'mounts two gigabytes of shared memory at /dev/shm' do
       directory = '/dev/shm'
 
@@ -26,7 +26,7 @@ describe 'install.sh' do
 
   end
 
-  context 'when container mode is not active and ORACLE_FILE is defined', :if => ENV.has_key?('ORACLE_HOME') && ENV['ORACLE_HOME'].start_with?('/u01') && ENV.has_key?('ORACLE_FILE') do
+  context 'when container mode is not active and ORACLE_FILE is defined', :sudo => false, :if => ENV.has_key?('ORACLE_FILE') do
     it 'creates /etc/init.d/oracle-xe' do
       executable = '/etc/init.d/oracle-xe'
 
@@ -46,7 +46,7 @@ describe 'install.sh' do
     end
   end
 
-  context 'when ORACLE_HOME is defined', :if => ENV.has_key?('ORACLE_HOME') do
+  context 'when container mode is not active', :sudo => false do
     describe 'shell access' do
       let(:sqlplus) { ENV['ORACLE_HOME'] + '/bin/sqlplus' }
 
@@ -69,4 +69,29 @@ describe 'install.sh' do
       end
     end
   end
+
+  context 'when container mode is active', :sudo => true do
+    describe 'shell access' do
+      let(:sqlplus) { ENV['ORACLE_HOME'] + '/bin/sqlplus' }
+
+      it 'grants normal access with password to the current user' do
+        IO.popen([sqlplus, %w(-L -S travis/travis)].flatten, 'w') { |io| io.puts 'exit' }
+        expect($?).to be_success
+      end
+
+      it 'grants DBA access with password to the current user' do
+        IO.popen([sqlplus, %w(-L -S sys/travis AS SYSDBA)].flatten, 'w') { |io| io.puts 'exit' }
+        expect($?).to be_success
+      end
+    end
+
+    describe 'library access' do
+      before(:context) { require 'oci8' }
+
+      it 'grants normal access with password to the current user' do
+        OCI8.new('travis/travis').exec('SELECT 1 FROM DUAL') { |row| expect(row).to eq([1]) }
+      end
+    end
+  end
+
 end
