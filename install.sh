@@ -40,6 +40,8 @@ else
 
   ln -s $ORACLE_HOME/lib/libclntsh.so.11.1 $ORACLE_HOME/lib/libclntsh.so
 
+  cat $ORACLE_HOME/config/scripts/init.ora
+
   # this should check that LD_LIBRARY_PATH was set correctly
   LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME/lib; export LD_LIBRARY_PATH
 
@@ -51,7 +53,8 @@ else
 
   find $ORACLE_HOME/config -type f | xargs sed -i "s:/u01:$ORACLE_BASE/u01:g;s:%ORACLE_HOME%:$ORACLE_BASE:g;"
 
-  cat $ORACLE_HOME/network/admin/listener.ora $ORACLE_HOME/config/scripts/init.ora $ORACLE_HOME/config/scripts/initXETemp.ora $ORACLE_HOME/dbs/init.ora
+  cat $ORACLE_HOME/network/admin/listener.ora $ORACLE_HOME/config/scripts/init.ora $ORACLE_HOME/config/scripts/initXETemp.ora $ORACLE_HOME/dbs/init.ora $ORACLE_HOME/config/scripts/XE.sh /home/travis/oracle/u01/app/oracle/product/11.2.0/xe/config/scripts/XE.sql
+
 
   mkdir -p $ORACLE_HOME/network/log $ORACLE_HOME/config/log
   touch $ORACLE_HOME/network/log/listener.log $ORACLE_HOME/config/log/CloneRmanRestore.log
