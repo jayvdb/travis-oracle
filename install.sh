@@ -48,7 +48,7 @@ else
   echo 'OS_AUTHENT_PREFIX=""' > "$ORACLE_HOME/config/scripts/init.ora"
   mkdir $ORACLE_BASE/u01/app/oracle/oradata
   mkdir $ORACLE_BASE/u01/app/oracle/diag
-  sed -i "s:%hostname%:localhost:g;s:%port%:1521:g;s:/u01:$ORACLE_BASE:g;" $ORACLE_HOME/network/admin/listener.ora
+  sed -i "s:%hostname%:localhost:g;s:%port%:1521:g;s:/u01:$ORACLE_BASE/u01:g;" $ORACLE_HOME/network/admin/listener.ora
   sed -i "/^memory_target/d" $ORACLE_HOME/config/scripts/init.ora $ORACLE_HOME/config/scripts/initXETemp.ora $ORACLE_HOME/dbs/init.ora
 
   find $ORACLE_HOME/config -type f | xargs sed -i "s:/u01:$ORACLE_BASE/u01:g;s:%ORACLE_HOME%:$ORACLE_BASE:g;"
