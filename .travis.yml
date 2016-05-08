@@ -23,6 +23,7 @@ matrix:
       addons:
         apt:
           packages:
+            - chkconfig
             - libaio1
             - rpm
 

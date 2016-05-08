@@ -8,14 +8,6 @@ describe 'install.sh' do
     expect(`df -B1 #{directory}`.split("\n")[1].split(/\b/)[2].to_i).to be >= 2147483648
   end
 
-  it 'creates an executable that does nothing at /sbin/chkconfig' do
-    executable = '/sbin/chkconfig'
-
-    expect(File).to exist(executable)
-    expect(File.lstat(executable).mode).to eq('100744'.to_i(8))
-    expect(IO.read(executable)).to eq("#!/bin/sh\n")
-  end
-
   it 'creates a directory at /var/lock/subsys' do
     directory = '/var/lock/subsys'
 
