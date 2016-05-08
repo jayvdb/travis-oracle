@@ -16,8 +16,6 @@ df -B1 /dev/shm | awk 'END { if ($1 != "shmfs" && $1 != "tmpfs" || $2 < 21474836
 test -f /sbin/chkconfig ||
   ( echo '#!/bin/sh' | sudo tee /sbin/chkconfig > /dev/null && sudo chmod u+x /sbin/chkconfig )
 
-test -d /var/lock/subsys || sudo mkdir /var/lock/subsys
-
 unzip -j "$(basename $ORACLE_FILE)" "*/$ORACLE_RPM"
 sudo rpm --install --nodeps --nopre "$ORACLE_RPM"
 
