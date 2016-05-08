@@ -28,6 +28,7 @@ matrix:
       sudo: required
     - env:
         - ORACLE_HOME=/home/travis/u01/app/oracle/product/11.2.0/xe
+          LD_LIBRARY_PATH=/home/travis/u01/app/oracle/product/11.2.0/xe/lib
           ORACLE_SID=XE
       sudo: false
       addons:
