@@ -2,7 +2,7 @@
 describe 'install.sh' do
   let(:sudo) { ENV.has_key?('ORACLE_HOME') && ENV['ORACLE_HOME'].start_with?('/u01') }
 
-  context 'when container mode is not active', :sudo => true do
+  context 'when container mode is not active', :if => sudo.eq(true) do
     it 'mounts two gigabytes of shared memory at /dev/shm' do
       directory = '/dev/shm'
 
@@ -28,7 +28,7 @@ describe 'install.sh' do
 
   end
 
-  context 'when container mode is not active and ORACLE_FILE is defined', :sudo => true, :if => ENV.has_key?('ORACLE_FILE') do
+  context 'when container mode is not active and ORACLE_FILE is defined', :if => sudo.eq(true) && ENV.has_key?('ORACLE_FILE') do
     it 'creates /etc/init.d/oracle-xe' do
       executable = '/etc/init.d/oracle-xe'
 
@@ -48,7 +48,7 @@ describe 'install.sh' do
     end
   end
 
-  context 'when container mode is not active', :sudo => true do
+  context 'when container mode is not active', :if => sudo.eq(true) do
     describe 'shell access' do
       let(:sqlplus) { ENV['ORACLE_HOME'] + '/bin/sqlplus' }
 
@@ -72,7 +72,7 @@ describe 'install.sh' do
     end
   end
 
-  context 'when container mode is active', :sudo => false do
+  context 'when container mode is active', :if => sudo.eq(false) do
     describe 'shell access' do
       let(:sqlplus) { ENV['ORACLE_HOME'] + '/bin/sqlplus' }
 
