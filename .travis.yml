@@ -35,6 +35,15 @@ matrix:
             - libaio1
             - rpm
 
+    - env: SUDO=0 DIST=trusty
+      dist: trusty
+      sudo: false
+      addons:
+        apt:
+          packages:
+            - libaio1
+            - rpm
+
 before_install:
   - bash -x ./download.sh
   # In container mode, Oracle XE is relocated into the $HOME
