@@ -27,5 +27,9 @@ matrix:
             - rpm
 
 before_install:
-  - ./download.sh
+  - test -f $ORACLE_FILE || ./download.sh
   - ./install.sh
+
+cache:
+  - directories:
+    - oracle11g
