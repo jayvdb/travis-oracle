@@ -1,5 +1,9 @@
 // vim: set et sw=2 ts=2:
 "use strict";
+
+var path = require('path');
+var fs = require('fs');
+
 var env = process.env;
 var Promise = require('bluebird');
 var Phantom = Promise.promisifyAll(require('node-phantom-simple'));
@@ -13,6 +17,10 @@ if (credentials.length <= 0) {
   console.error("Missing ORACLE_LOGIN environment variables!");
   process.exit(1);
 }
+
+var directory = path.dirname(env['ORACLE_FILE']);
+fs.mkdirSync(directory);
+process.chdir(directory);
 
 Phantom.createAsync({ parameters: { 'ssl-protocol': 'tlsv1' } }).then(function (browser) {
   browser = Promise.promisifyAll(browser, { suffix: 'Promise' });
