@@ -1,7 +1,6 @@
 // vim: set et sw=2 ts=2:
 "use strict";
 
-var path = require('path');
 var fs = require('fs');
 
 var env = process.env;
@@ -19,7 +18,7 @@ if (credentials.length <= 0) {
 }
 
 if (env['ORACLE_ZIP_DIR']) {
-  var directory = path.dirname(env['ORACLE_ZIP_DIR']);
+  var directory = env['ORACLE_ZIP_DIR'];
   if (!fs.exists(directory)) {
     fs.mkdirSync(directory);
   }
