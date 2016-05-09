@@ -56,15 +56,14 @@ else
 
   $ORACLE_HOME/bin/lsnrctl start
   sh -x $ORACLE_HOME/config/scripts/XE.sh
-  cat > $ORACLE_HOME/config/scripts/create_travis_user.sql <<SQL
+
+  $ORACLE_HOME/bin/sqlplus /nolog <<SQL
 host $ORACLE_HOME/bin/orapwd file=$ORACLE_HOME/dbs/orapwXE password=oracle force=y
 connect "SYS"/"oracle" as SYSDBA
 alter user sys identified by "travis";
 alter user system identified by "travis";
 exit
 SQL
-
-  $ORACLE_HOME/bin/sqlplus /nolog @$ORACLE_HOME/config/scripts/create_travis_user.sql
 
   $ORACLE_HOME/bin/sqlplus sys/travis AS SYSDBA <<SQL
 startup
