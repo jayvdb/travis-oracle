@@ -27,10 +27,10 @@ matrix:
             - rpm
 
 before_install:
-  - test -f $ORACLE_FILE || ./download.sh
-  - find . -name '*.zip'
+  - test "$DIST" = trusty && export ORACLE_ZIP_DIR=$HOME/.cache
+  - test -f "$ORACLE_ZIP_DIR"/$(basename $ORACLE_FILE) || ./download.sh
   - ./install.sh
 
 cache:
   - directories:
-    - oracle11g
+    - .cache

@@ -18,9 +18,11 @@ if (credentials.length <= 0) {
   process.exit(1);
 }
 
-var directory = path.dirname(env['ORACLE_FILE']);
-fs.mkdirSync(directory);
-process.chdir(directory);
+if (env['ORACLE_ZIP_DIR']) {
+  var directory = path.dirname(env['ORACLE_ZIP_DIR']);
+  fs.mkdirSync(directory);
+  process.chdir(directory);
+}
 
 Phantom.createAsync({ parameters: { 'ssl-protocol': 'tlsv1' } }).then(function (browser) {
   browser = Promise.promisifyAll(browser, { suffix: 'Promise' });
