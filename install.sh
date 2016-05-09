@@ -31,7 +31,7 @@ if [ -u /usr/bin/sudo ]; then
 else
   ORACLE_BASE=$HOME/oracle
   mkdir $ORACLE_BASE
-  rpm --install --nodeps --nopre --noscripts --notriggers  --relocate "/=$ORACLE_BASE/" "$ORACLE_RPM"
+  rpm --install --nodeps --nopre --noscripts --notriggers  --prefix="$ORACLE_BASE/" "$ORACLE_RPM"
 
   ln -s $ORACLE_HOME/lib/libclntsh.so.11.1 $ORACLE_HOME/lib/libclntsh.so
 

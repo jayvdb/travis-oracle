@@ -10,15 +10,15 @@ env:
 
 matrix:
   include:
-    - env: APT_ADDON=0 DIST=precise
+    - env: SUDO=1 APT_ADDON=0 DIST=precise
       dist: precise
       addons:
         apt: false
-    - env: APT_ADDON=0 DIST=trusty
+    - env: SUDO=1 APT_ADDON=0 DIST=trusty
       dist: trusty
       addons:
         apt: false
-    - env: APT_ADDON=1 DIST=precise
+    - env: SUDO=1 APT_ADDON=1 DIST=precise
       dist: precise
       addons:
         apt:
@@ -37,7 +37,7 @@ matrix:
 
     - env: SUDO=0 DIST=trusty
       dist: trusty
-      sudo: false
+      sudo: required
       addons:
         apt:
           packages:
@@ -46,6 +46,7 @@ matrix:
 
 before_install:
   - bash -x ./download.sh
+  - if [[ $DIST = "trusty" && $SUDO -eq 0 ]]; then sudo chmod u-s /usr/bin/sudo ; fi
   # In container mode, Oracle XE is relocated into the $HOME
   - test -u /usr/bin/sudo || export ORACLE_HOME=$HOME/oracle/$ORACLE_HOME
   - bash -x ./install.sh
