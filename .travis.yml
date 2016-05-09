@@ -27,5 +27,12 @@ matrix:
             - rpm
 
 before_install:
-  - ./download.sh
+  # On trusty, download the zip file into a cachable directory
+  - test "$DIST" = precise || export ORACLE_ZIP_DIR=$HOME/.cache
+  # If the zip file already exists, do not download it again
+  - test -f "$ORACLE_ZIP_DIR"/$(basename $ORACLE_FILE) || ./download.sh
   - ./install.sh
+
+cache:
+  - directories:
+    - $HOME/.cache
