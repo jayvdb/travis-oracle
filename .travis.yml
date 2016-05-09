@@ -28,7 +28,7 @@ matrix:
 
 before_install:
   - test -f $ORACLE_FILE || ./download.sh
-  - find oracle11g/
+  - find . -name '*.zip'
   - ./install.sh
 
 cache:
