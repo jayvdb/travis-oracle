@@ -1,8 +1,5 @@
 #!/bin/sh -e
 
-test -u /usr/bin/sudo
-SUDO_DISABLED=$?
-
 [ -n "$ORACLE_FILE" ] || { echo "Missing ORACLE_FILE environment variable!"; exit 1; }
 [ -n "$ORACLE_HOME" ] || { echo "Missing ORACLE_HOME environment variable!"; exit 1; }
 
@@ -13,7 +10,9 @@ cd "$(dirname "$(readlink -f "$0")")"
 dpkg -s bc libaio1 rpm unzip > /dev/null 2>&1 ||
   ( sudo apt-get -qq update && sudo apt-get --no-install-recommends -qq install bc libaio1 rpm unzip )
 
-if [ $SUDO_DISABLED -eq 0 ]; then
+unzip -j "$(basename $ORACLE_FILE)" "*/$ORACLE_RPM"
+
+if [ -u /usr/bin/sudo ]; then
   df -B1 /dev/shm | awk 'END { if ($1 != "shmfs" && $1 != "tmpfs" || $2 < 2147483648) exit 1 }' ||
     ( sudo rm -r /dev/shm && sudo mkdir /dev/shm && sudo mount -t tmpfs shmfs -o size=2G /dev/shm )
 
@@ -21,18 +20,13 @@ if [ $SUDO_DISABLED -eq 0 ]; then
     ( echo '#!/bin/sh' | sudo tee /sbin/chkconfig > /dev/null && sudo chmod u+x /sbin/chkconfig )
 
   test -d /var/lock/subsys || sudo mkdir /var/lock/subsys
-fi
 
-unzip -j "$(basename $ORACLE_FILE)" "*/$ORACLE_RPM"
-
-if [ $SUDO_DISABLED -eq 0 ]; then
   sudo rpm --install --nodeps --nopre "$ORACLE_RPM"
 
   echo 'OS_AUTHENT_PREFIX=""' | sudo tee -a "$ORACLE_HOME/config/scripts/init.ora" > /dev/null
   sudo usermod -aG dba $USER
   ( echo ; echo ; echo travis ; echo travis ; echo n ) | sudo AWK='/usr/bin/awk' /etc/init.d/oracle-xe configure
   IDENTIFIED_BY='EXTERNALLY'
-
 else
   ORACLE_BASE=$HOME/oracle
   mkdir $ORACLE_BASE
@@ -65,10 +59,9 @@ alter user system identified by "travis";
 exit
 SQL
 
-  $ORACLE_HOME/bin/sqlplus sys/travis AS SYSDBA <<SQL
-startup
-SQL
-IDENTIFIED_BY='BY "travis"'
+  echo startup | $ORACLE_HOME/bin/sqlplus sys/travis AS SYSDBA
+
+  IDENTIFIED_BY='BY "travis"'
 fi
 
 "$ORACLE_HOME/bin/sqlplus" -L -S sys/travis AS SYSDBA <<SQL
