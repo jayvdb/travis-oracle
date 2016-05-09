@@ -45,7 +45,6 @@ else
   # this should check that LD_LIBRARY_PATH was set correctly
   LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME/lib; export LD_LIBRARY_PATH
 
-  echo 'OS_AUTHENT_PREFIX=""' > "$ORACLE_HOME/config/scripts/init.ora"
   mkdir $ORACLE_BASE/u01/app/oracle/oradata
   mkdir $ORACLE_BASE/u01/app/oracle/diag
   sed -i "s:%hostname%:localhost:g;s:%port%:1521:g;s:/u01:$ORACLE_BASE/u01:g;" $ORACLE_HOME/network/admin/listener.ora
@@ -53,7 +52,18 @@ else
 
   find $ORACLE_HOME/config -type f | xargs sed -i "s:/u01:$ORACLE_BASE/u01:g;s:%ORACLE_HOME%:$ORACLE_BASE:g;"
 
-  cat $ORACLE_HOME/network/admin/listener.ora $ORACLE_HOME/config/scripts/init.ora $ORACLE_HOME/config/scripts/initXETemp.ora $ORACLE_HOME/dbs/init.ora $ORACLE_HOME/config/scripts/XE.sh /home/travis/oracle/u01/app/oracle/product/11.2.0/xe/config/scripts/XE.sql
+  echo ==$ORACLE_HOME/network/admin/listener.ora==
+  cat $ORACLE_HOME/network/admin/listener.ora
+  echo ==$ORACLE_HOME/config/scripts/init.ora==
+  cat $ORACLE_HOME/config/scripts/init.ora
+  echo ==$ORACLE_HOME/config/scripts/initXETemp.ora==
+  cat $ORACLE_HOME/config/scripts/initXETemp.ora
+  echo ==$ORACLE_HOME/dbs/init.ora==
+  cat $ORACLE_HOME/dbs/init.ora
+  echo ==$ORACLE_HOME/config/scripts/XE.sh==
+  cat $ORACLE_HOME/config/scripts/XE.sh
+  echo ==/home/travis/oracle/u01/app/oracle/product/11.2.0/xe/config/scripts/XE.sql==
+  cat /home/travis/oracle/u01/app/oracle/product/11.2.0/xe/config/scripts/XE.sql
 
   find $ORACLE_HOME/config -type f | grep '[/]u01'
 
