@@ -11,9 +11,9 @@ dpkg -s bc libaio1 rpm unzip > /dev/null 2>&1 ||
   ( sudo apt-get -qq update && sudo apt-get --no-install-recommends -qq install bc libaio1 rpm unzip )
 
 if [ "$ORACLE_ZIP_DIR" != "" ]; then
-  ORACLE_ZIP="$ORACLE_ZIP_DIR"/$(basename $ORACLE_FILE)
+  ORACLE_ZIP="$ORACLE_ZIP_DIR/$(basename $ORACLE_FILE)"
 else
-  ORACLE_ZIP=$ORACLE_FILE
+  ORACLE_ZIP="$(basename $ORACLE_FILE)"
 fi
 
 unzip -j $ORACLE_ZIP "*/$ORACLE_RPM"
