@@ -32,6 +32,7 @@ else
   ORACLE_BASE=$HOME/oracle
   mkdir $ORACLE_BASE
   rpm --install --nodeps --nopre --noscripts --notriggers  --prefix="$ORACLE_BASE/" "$ORACLE_RPM"
+  ls -al $ORACLE_BASE
 
   ln -s $ORACLE_HOME/lib/libclntsh.so.11.1 $ORACLE_HOME/lib/libclntsh.so
 
