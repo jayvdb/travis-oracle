@@ -34,4 +34,4 @@ before_install:
 
 cache:
   - directories:
-    - .cache
+    - $HOME/.cache
