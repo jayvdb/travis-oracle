@@ -19,7 +19,7 @@ if (credentials.length <= 0) {
 
 if (env['ORACLE_ZIP_DIR']) {
   var directory = env['ORACLE_ZIP_DIR'];
-  if (!fs.exists(directory)) {
+  if (!fs.existsSync(directory)) {
     fs.mkdirSync(directory);
   }
   process.chdir(directory);
