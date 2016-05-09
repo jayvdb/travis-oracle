@@ -26,10 +26,8 @@ matrix:
             - libaio1
             - rpm
       sudo: required
-    - env:
-        - ORACLE_HOME=/home/travis/oracle/u01/app/oracle/product/11.2.0/xe
-          LD_LIBRARY_PATH=/home/travis/oracle/u01/app/oracle/product/11.2.0/xe/lib
-          ORACLE_SID=XE
+    - env: SUDO=0 DIST=precise
+      dist: precise
       sudo: false
       addons:
         apt:
@@ -39,4 +37,8 @@ matrix:
 
 before_install:
   - bash -x ./download.sh
+  # In container mode, Oracle XE is relocated into the $HOME
+  - test -u /usr/bin/sudo || export ORACLE_HOME=$HOME/oracle/$ORACLE_HOME
   - bash -x ./install.sh
+  # LD_LIBRARY_PATH is only needed for container mode
+  - test -u /usr/bin/sudo || export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
