@@ -27,7 +27,8 @@ matrix:
             - rpm
 
 before_install:
-  - test "$DIST" = trusty && export ORACLE_ZIP_DIR=$HOME/.cache
+  - test "$DIST" = precise || export ORACLE_ZIP_DIR=$HOME/.cache
+  - echo $ORACLE_ZIP_DIR
   - test -f "$ORACLE_ZIP_DIR"/$(basename $ORACLE_FILE) || ./download.sh
   - ./install.sh
 
